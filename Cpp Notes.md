@@ -63,6 +63,48 @@ vector<double> v; std::accumulate(v.begin(), v.end(), 0);
 
 
 
+# 类
+
+## 构造函数
+
+```cpp
+class People {
+public:
+    People(int height, int weight) : m_height(height), m_weight(weight) {};
+    People(const People& people) : m_height(people.m_height), m_weight(people.m_weight) {};
+    ~People() = default;
+
+private:
+    int m_height;
+    int m_weight;
+};
+
+People p1 {}; // 报错，无对应构造函数
+People p1 (); // 不报错，声明了一个函数
+People p2(1, 2);
+People p3{1, 3}; // 推荐，列表初始化，防止窄化转换。
+```
+
+## 静态变量
+
+```cpp
+class People {
+public:
+    People(int height, int weight) : m_height(height), m_weight(weight) {};
+    People(const People& people) : m_height(people.m_height), m_weight(people.m_weight) {};
+    ~People() = default;
+
+private:
+    int m_height; // 定义
+    static int unique; // 声明
+};
+int People::unique = 0; // 定义
+```
+
+这里的`static int unique;`是声明，因为类的静态成员变量需要在类外定义和初始化，所以语法规定，定义的时候需要添加变量的类型，明确`int People::unique = 0;`
+
+ 
+
 # 函数
 
 ## 类型
@@ -141,8 +183,10 @@ ptr->data(); // 返回vector<int>对象首元素的地址
 ## 易错点
 
 ```cpp
+int a = 5;
 shared_ptr<int> p(5);
 shared_ptr<int>(p.get()); // 会导致p变成悬垂指针
+shared_ptr<int>(&a); // 不安全，尝试析构栈变量
 ```
 
 
